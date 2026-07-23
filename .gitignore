@@ -1,0 +1,9 @@
+node_modules
+artifacts
+cache
+frontend/.next
+frontend/out
+.env
+*.zip
+node_modules
+frontend/node_modules
