@@ -1,0 +1,870 @@
+יהוה
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Persistent Cent (PCENT) - Next-generation deflationary ERC-20 cryptocurrency with staking rewards, governance, and real-world utility. Join the presale now." />
+  <meta name="keywords" content="PCENT, Persistent Cent, cryptocurrency, ERC20, presale, crypto investment, staking, deflationary token, Ethereum" />
+  <meta name="author" content="Persistent Solutions" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+  <title>Persistent Cent (PCENT) Official Presale | Deflationary ERC-20 Crypto with Staking</title>
+  
+  <!-- Open Graph / Social SEO -->
+  <meta property="og:title" content="Persistent Cent (PCENT) - Join the Presale Now" />
+  <meta property="og:description" content="The next-generation cryptocurrency built for real-world utility, sustainable growth, and true decentralization." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://persistent-solutions.com" />
+  <meta property="og:image" content="https://persistent-solutions.com/og-image.jpg" />
+  <meta property="og:site_name" content="Persistent Solutions" />
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Persistent Cent (PCENT) Official Presale" />
+  <meta name="twitter:description" content="Deflationary ERC-20 token with staking rewards. Join now!" />
+  <meta name="twitter:image" content="https://persistent-solutions.com/og-image.jpg" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://persistent-solutions.com" />
+
+  <style>
+    :root {
+      --green: #00ff88;
+      --purple: #b026ff;
+      --gold: #ffd700;
+      --dark-bg: rgba(5, 5, 15, 0.92);
+      --card-bg: rgba(10, 10, 25, 0.9);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: transparent;
+      color: #e0e0e0;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+    canvas#matrixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 2;
+    }
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); }
+    h2 { font-size: clamp(2rem, 6vw, 2.8rem); margin-bottom: 1.5rem; }
+    h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    p { margin-bottom: 1rem; color: #ccc; }
+    a { text-decoration: none; color: var(--green); transition: all 0.3s; }
+    a:hover { color: var(--gold); }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-size: 1rem;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: #0a0a0a;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    }
+    .btn-primary:hover {
+      background: #e6c200;
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+    }
+    .btn-outline {
+      border: 2px solid var(--purple);
+      color: var(--purple);
+      background: transparent;
+      box-shadow: 0 0 10px rgba(176, 38, 255, 0.3);
+    }
+    .btn-outline:hover {
+      background: var(--purple);
+      color: var(--gold);
+      box-shadow: 0 0 25px rgba(176, 38, 255, 0.8);
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(5, 5, 15, 0.9);
+      backdrop-filter: blur(15px);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(176, 38, 255, 0.2);
+    }
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: #fff;
+    }
+    .logo .accent-green { color: var(--green); }
+    .logo .accent-purple { color: var(--purple); }
+    .logo .accent-gold { color: var(--gold); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #ccc;
+      font-weight: 500;
+      position: relative;
+    }
+    .nav-links a:hover {
+      color: var(--gold);
+      text-shadow: 0 0 8px var(--gold);
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      color: var(--gold);
+      cursor: pointer;
+    }
+
+    /* Sections */
+    section {
+      padding: 6rem 0;
+      position: relative;
+      z-index: 2;
+    }
+    .section-bg {
+      background: var(--dark-bg);
+      backdrop-filter: blur(5px);
+    }
+    .section-bg-alt {
+      background: rgba(10, 10, 30, 0.85);
+      backdrop-filter: blur(5px);
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-title h2 {
+      background: linear-gradient(90deg, var(--green), var(--purple), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Hero */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      padding-top: 80px;
+      background: transparent;
+    }
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .countdown-item {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--purple);
+      border-radius: 12px;
+      padding: 1rem;
+      min-width: 80px;
+      backdrop-filter: blur(5px);
+    }
+    .countdown-item span {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-shadow: 0 0 10px var(--gold);
+    }
+    .countdown-item small {
+      font-size: 0.8rem;
+      color: var(--purple);
+    }
+
+    /* About */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .about-image {
+      background: linear-gradient(135deg, var(--purple), var(--green));
+      border-radius: 20px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8rem;
+      color: var(--gold);
+      text-shadow: 0 0 25px var(--gold);
+      box-shadow: 0 0 40px rgba(176, 38, 255, 0.4);
+    }
+
+    /* Tokenomics */
+    .tokenomics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .distribution-item {
+      margin-bottom: 1.2rem;
+    }
+    .distribution-bar {
+      display: flex;
+      align-items: center;
+      margin-top: 0.3rem;
+    }
+    .bar {
+      height: 8px;
+      background: var(--green);
+      border-radius: 4px;
+      margin-right: 1rem;
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    /* Roadmap */
+    .roadmap {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-left: 2rem;
+    }
+    .roadmap::before {
+      content: '';
+      position: absolute;
+      left: 1rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--purple);
+      opacity: 0.6;
+      box-shadow: 0 0 10px var(--purple);
+    }
+    .roadmap-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 2rem;
+    }
+    .roadmap-item::before {
+      content: '';
+      position: absolute;
+      left: -0.35rem;
+      top: 0.4rem;
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      border: 2px solid var(--purple);
+      box-shadow: 0 0 12px var(--gold);
+    }
+    .roadmap-date {
+      font-size: 0.9rem;
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    /* Team */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+    .team-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(176, 38, 255, 0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(5px);
+    }
+    .team-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--gold);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+    .avatar {
+      width: 100px;
+      height: 100px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      color: var(--gold);
+      border: 3px solid var(--purple);
+      text-shadow: 0 0 20px var(--gold);
+      box-shadow: 0 0 20px rgba(176, 38, 255, 0.4);
+    }
+    .team-card h3 {
+      color: var(--green);
+    }
+
+    /* Presale */
+    .presale-box {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+    .presale-progress {
+      height: 10px;
+      background: #1a1a2e;
+      border-radius: 10px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 35%;
+      height: 100%;
+      background: var(--green);
+      border-radius: 10px;
+      box-shadow: 0 0 15px var(--green);
+    }
+
+    /* FAQ */
+    .faq-item {
+      border-bottom: 1px solid rgba(176, 38, 255, 0.3);
+      padding: 1.2rem 0;
+    }
+    .faq-question {
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--gold);
+      transition: 0.3s;
+    }
+    .faq-question:hover {
+      text-shadow: 0 0 8px var(--gold);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      color: #aaa;
+      margin-top: 0.5rem;
+    }
+    .faq-answer.open {
+      max-height: 200px;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(5, 5, 15, 0.95);
+      text-align: center;
+      padding: 3rem 0 1.5rem;
+      border-top: 1px solid var(--purple);
+      backdrop-filter: blur(5px);
+    }
+    .social-links a {
+      font-size: 1.8rem;
+      margin: 0 0.8rem;
+      color: var(--purple);
+      transition: 0.3s;
+    }
+    .social-links a:hover {
+      color: var(--gold);
+      text-shadow: 0 0 15px var(--gold);
+    }
+    .newsletter-form {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .newsletter-form input {
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      border: 1px solid var(--purple);
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      outline: none;
+      width: 300px;
+      max-width: 80%;
+      transition: 0.3s;
+    }
+    .newsletter-form input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 12px var(--gold);
+    }
+
+    /* Cookie & Modals */
+    #cookieConsent {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      border: 1px solid var(--purple);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      max-width: 420px;
+      box-shadow: 0 0 30px rgba(176, 38, 255, 0.5);
+      z-index: 2000;
+      display: none;
+      text-align: center;
+    }
+    .cookie-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--card-bg);
+      padding: 2rem;
+      max-width: 600px;
+      border: 2px solid var(--purple);
+      border-radius: 16px;
+      z-index: 3000;
+      box-shadow: 0 0 40px rgba(176, 38, 255, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: rgba(5,5,15,0.95);
+        flex-direction: column;
+        padding: 1.5rem;
+        border-top: 1px solid var(--purple);
+        backdrop-filter: blur(10px);
+      }
+      .nav-links.active { display: flex; }
+      .menu-toggle { display: block; }
+      .about-grid, .tokenomics-grid { grid-template-columns: 1fr; }
+      .about-image { height: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo">
+        <span class="accent-green">⛓️</span> Persistent<span class="accent-purple">.</span>Solutions
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#tokenomics">Tokenomics</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#presale">Presale</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container hero-content">
+      <h1>Welcome to the <span style="color:var(--gold); text-shadow:0 0 15px var(--gold);">Persistent Cent</span> Era</h1>
+      <p>PCENT – the cryptocurrency built for real‑world utility, sustainable growth, and true decentralization. Join the presale now.</p>
+      <div>
+        <a href="#presale" class="btn btn-primary">Buy Presale</a>
+        <a href="#" onclick="connectWallet()" class="btn btn-outline" style="margin-left:1rem;">Connect Wallet</a>
+        <a href="#" class="btn btn-outline" style="margin-left:1rem;">Whitepaper</a>
+      </div>
+      <div class="countdown">
+        <div class="countdown-item"><span id="days">00</span><small>Days</small></div>
+        <div class="countdown-item"><span id="hours">00</span><small>Hours</small></div>
+        <div class="countdown-item"><span id="minutes">00</span><small>Minutes</small></div>
+        <div class="countdown-item"><span id="seconds">00</span><small>Seconds</small></div>
+      </div>
+      <p style="font-size:0.9rem;">Public sale ends soon – Don’t miss out</p>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section-bg-alt">
+    <div class="container">
+      <div class="section-title"><h2>About Persistent Cent</h2></div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>Persistent Cent (PCENT) is a deflationary ERC‑20 token with staking rewards, governance, and a mission to bridge crypto with everyday payments.</p>
+          <p>Built on Ethereum, PCENT uses a 2% transaction burn to increase scarcity while rewarding long‑term holders through a 12% APY staking system.</p>
+          <a href="#" class="btn btn-outline">Learn More</a>
+        </div>
+        <div class="about-image">∞</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOKENOMICS -->
+  <section id="tokenomics" class="section-bg">
+    <div class="container">
+      <div class="section-title"><h2>Token Distribution</h2></div>
+      <div class="tokenomics-grid">
+        <div>
+          <div class="distribution-item"><span>Presale</span><div class="distribution-bar"><div class="bar" style="width:35%"></div><span>35%</span></div></div>
+          <div class="distribution-item"><span>Liquidity Pool</span><div class="distribution-bar"><div class="bar" style="width:25%"></div><span>25%</span></div></div>
+          <div class="distribution-item"><span>Ecosystem & Dev</span><div class="distribution-bar"><div class="bar" style="width:20%"></div><span>20%</span></div></div>
+          <div class="distribution-item"><span>Team & Advisors</span><div class="distribution-bar"><div class="bar" style="width:10%"></div><span>10%</span></div></div>
+          <div class="distribution-item"><span>Reserve</span><div class="distribution-bar"><div class="bar" style="width:10%"></div><span>10%</span></div></div>
+        </div>
+        <div>
+          <p><strong>Total Supply:</strong> 1,000,000,000 PCENT</p>
+          <p><strong>Network:</strong> Ethereum (ERC‑20)</p>
+          <p><strong>Deflationary:</strong> 2% burn per transaction</p>
+          <p><strong>Staking:</strong> Up to 12% APY</p>
+          <a href="#" class="btn btn-outline">Full Tokenomics</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section id="roadmap" class="section-bg-alt">
+    <div class="container">
+      <div class="section-title"><h2>Development Roadmap</h2></div>
+      <div class="roadmap">
+        <div class="roadmap-item">
+          <p class="roadmap-date">Q3 2026</p>
+          <h3>Concept & Presale Launch</h3>
+          <p>Website, smart contract audit, and public presale.</p>
+        </div>
+        <div class="roadmap-item">
+          <p class="roadmap-date">Q4 2026</p>
+          <h3>Exchange Listings</h3>
+          <p>Uniswap listing, CoinGecko/CMC application.</p>
+        </div>
+        <div class="roadmap-item">
+          <p class="roadmap-date">Q1 2027</p>
+          <h3>Wallet & Staking</h3>
+          <p>Persistent Wallet with staking and governance.</p>
+        </div>
+        <div class="roadmap-item">
+          <p class="roadmap-date">Q2 2027</p>
+          <h3>Ecosystem Expansion</h3>
+          <p>Partner integrations, NFT marketplace, payments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" class="section-bg">
+    <div class="container">
+      <div class="section-title"><h2>Meet the Team</h2></div>
+      <div class="team-grid">
+        <div class="team-card"><div class="avatar">∞</div><h3>Alex Rivera</h3><p>CEO & Founder</p></div>
+        <div class="team-card"><div class="avatar">∞</div><h3>Sophia Chen</h3><p>CTO & Blockchain Lead</p></div>
+        <div class="team-card"><div class="avatar">∞</div><h3>Marcus Osei</h3><p>Marketing Director</p></div>
+        <div class="team-card"><div class="avatar">∞</div><h3>Elena Novak</h3><p>Community Manager</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRESALE -->
+  <section id="presale" class="section-bg-alt">
+    <div class="container">
+      <div class="section-title"><h2>Presale Live</h2></div>
+      <div class="presale-box">
+        <p style="font-size:1.2rem;">Buy PCENT at the lowest price</p>
+        <p><strong>1 ETH = 10,000 PCENT</strong></p>
+        <div class="presale-progress"><div class="progress-fill" style="width:35%"></div></div>
+        <p>35% Sold – Soft cap reached!</p>
+        <form id="presaleForm" style="margin-top:1.5rem;">
+          <input type="number" placeholder="Amount in ETH" style="width:100%; padding:0.8rem; border-radius:8px; border:1px solid var(--purple); background:rgba(0,0,0,0.6); color:#fff; margin-bottom:1rem;" required />
+          <button type="button" onclick="connectWallet()" class="btn btn-primary" style="width:100%;">Connect Wallet & Buy</button>
+        </form>
+        <p style="font-size:0.8rem; margin-top:1rem;">* #justrunthatshit</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section-bg">
+    <div class="container">
+      <div class="section-title"><h2>Frequently Asked Questions</h2></div>
+      <div class="faq">
+        <div class="faq-item">
+          <div class="faq-question">What is Persistent Cent? <span>+</span></div>
+          <div class="faq-answer"><p>PCENT is an ERC‑20 token designed for long‑term value, with burns and staking rewards.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">How to join the presale? <span>+</span></div>
+          <div class="faq-answer"><p>Connect your MetaMask wallet on the presale page once live, and send ETH to receive PCENT.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">When will PCENT list on exchanges? <span>+</span></div>
+          <div class="faq-answer"><p>Uniswap listing immediately after presale, with CEX applications to follow.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Is the contract audited? <span>+</span></div>
+          <div class="faq-answer"><p>Yes, audited by a top security firm. Report will be published on the site.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="social-links">
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="#" aria-label="Telegram">✈️</a>
+        <a href="#" aria-label="Discord">🎮</a>
+        <a href="#" aria-label="GitHub">🐙</a>
+      </div>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" placeholder="Enter your email for updates" required />
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+      <p>© 2026 Persistent Solutions. All rights reserved.</p>
+      <p style="font-size:0.8rem; color:#666;">
+        <a href="#" onclick="showModal('privacyModal')">Privacy Policy</a> | 
+        <a href="#" onclick="showModal('termsModal')">Terms & Agreements</a> | 
+        <a href="#" onclick="showCookieSettings()">Cookie Preferences</a>
+      </p>
+      <p style="font-size:0.8rem; color:#666;">persistent-solutions.com</p>
+    </div>
+  </footer>
+
+  <!-- Cookie Consent -->
+  <div id="cookieConsent">
+    <p>We use cookies to enhance your experience. By continuing, you agree to our <a href="#" onclick="showModal('privacyModal'); hideCookieBanner()">Privacy Policy</a>.</p>
+    <div class="cookie-btns">
+      <button onclick="acceptCookies()" class="btn btn-primary cookie-btn">Accept All</button>
+      <button onclick="showCookieSettings()" class="btn btn-outline cookie-btn">Preferences</button>
+    </div>
+  </div>
+
+  <!-- Privacy Modal -->
+  <div id="privacyModal" class="modal">
+    <h3>Privacy Policy</h3>
+    <p style="max-height:400px; overflow-y:auto; color:#ccc; font-size:0.95rem;">
+      Persistent Solutions respects your privacy. We collect minimal data for wallet connections and site analytics. No selling of data. Cookies are used for functionality and preferences. Full policy available upon request.<br><br>Last updated: July 2026.
+    </p>
+    <button onclick="hideModal('privacyModal')" class="btn btn-primary" style="margin-top:1rem;">Close</button>
+  </div>
+
+  <!-- Terms Modal -->
+  <div id="termsModal" class="modal">
+    <h3>Terms & Agreements</h3>
+    <p style="max-height:400px; overflow-y:auto; color:#ccc; font-size:0.95rem;">
+      By using this site, you agree to not hold Persistent Solutions liable for any financial losses. Crypto investments are high risk. This is not financial advice. PCENT token has no guaranteed value.<br><br>Users must comply with local laws. Presale participation subject to eligibility.<br><br>Last updated: July 2026.
+    </p>
+    <button onclick="hideModal('termsModal')" class="btn btn-primary" style="margin-top:1rem;">Close</button>
+  </div>
+
+  <script>
+    // Matrix Canvas Background
+    (function() {
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const chars = 'ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ'.split('');
+      const cryptos = ['₿', 'Ξ', 'Ł', 'Đ', 'Ƀ', '◎', '⬡', '⬢'];
+      const allSymbols = chars.concat(cryptos);
+
+      const fontSize = 14;
+      const columns = Math.floor(width / fontSize);
+      const drops = Array(columns).fill(0);
+
+      function getRandomColor() {
+        const colors = ['#00ff88', '#b026ff', '#ffd700'];
+        return colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      function draw() {
+        ctx.fillStyle = 'rgba(5, 5, 15, 0.05)';
+        ctx.fillRect(0, 0, width, height);
+        ctx.font = fontSize + 'px monospace';
+        for (let i = 0; i < drops.length; i++) {
+          const text = allSymbols[Math.floor(Math.random() * allSymbols.length)];
+          const x = i * fontSize;
+          const y = drops[i] * fontSize;
+          ctx.fillStyle = getRandomColor();
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.shadowBlur = 8;
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          if (y > height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // UI Interactions
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+    navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')));
+
+    // Countdown
+    const launchDate = new Date();
+    launchDate.setDate(launchDate.getDate() + 30);
+    setInterval(() => {
+      const now = new Date().getTime();
+      const d = launchDate - now;
+      if (d < 0) {
+        document.querySelector('.countdown').innerHTML = '<p style="font-size:1.5rem;">Presale ended</p>';
+        return;
+      }
+      document.getElementById('days').innerText = Math.floor(d/(86400000)).toString().padStart(2,'0');
+      document.getElementById('hours').innerText = Math.floor((d%(86400000))/(3600000)).toString().padStart(2,'0');
+      document.getElementById('minutes').innerText = Math.floor((d%(3600000))/60000).toString().padStart(2,'0');
+      document.getElementById('seconds').innerText = Math.floor((d%(60000))/1000).toString().padStart(2,'0');
+    }, 1000);
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const answer = q.nextElementSibling;
+        const isOpen = answer.classList.contains('open');
+        document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+        document.querySelectorAll('.faq-question span').forEach(s => s.innerText = '+');
+        if (!isOpen) {
+          answer.classList.add('open');
+          q.querySelector('span').innerText = '−';
+        }
+      });
+    });
+
+    // Cookie Consent
+    function showCookieBanner() {
+      const consent = document.getElementById('cookieConsent');
+      if (!localStorage.getItem('cookiesAccepted')) {
+        consent.style.display = 'block';
+        setTimeout(() => {
+          if (consent.style.display !== 'none') acceptCookies();
+        }, 20000);
+      }
+    }
+    function acceptCookies() {
+      localStorage.setItem('cookiesAccepted', 'true');
+      document.getElementById('cookieConsent').style.display = 'none';
+    }
+    function showCookieSettings() {
+      alert('Cookie Preferences (Demo): Functional, Analytics, Marketing - All enabled by default.');
+    }
+    function hideCookieBanner() {
+      document.getElementById('cookieConsent').style.display = 'none';
+    }
+
+    // Modals
+    function showModal(modalId) {
+      document.getElementById(modalId).style.display = 'block';
+    }
+    function hideModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Web3 Wallet
+    async function connectWallet() {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const account = accounts[0];
+          alert(`✅ Wallet connected!\nAddress: ${account.substring(0,6)}...${account.substring(account.length-4)}\n\nReady for PCENT presale.`);
+        } catch (error) {
+          alert('❌ Connection failed or rejected.');
+        }
+      } else {
+        alert('🦊 Please install MetaMask or another Web3 wallet.');
+      }
+    }
+
+    // Demo Forms
+    document.getElementById('newsletterForm').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Thanks for subscribing! (Demo)');
+      e.target.reset();
+    });
+    document.getElementById('presaleForm').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Use the Connect Wallet button above. (Demo)');
+    });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      showCookieBanner();
+    });
+  </script>
+</body>
+</html>
