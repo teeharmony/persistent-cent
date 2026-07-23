@@ -6,29 +6,11 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-/**
- * @title PCENTStaking
- * @notice Stake PCENT, earn yield from vault-backed revenue.
- *         Reward rate is tied to vault performance, not arbitrary minting.
- *         
- *         Backing Flow:
- *         ┌──────────────────────────────────────────────────┐
- *         │   User pays fee in USD0                          │
- *         │   → SubmissionVault collects                     │
- *         │   → Forwarded to PCENTVault                      │
- *         │   → PCENTVault.totalAssets() grows               │
- *         │   → Backing strengthens                          │
- *         │   → Staking rewards become sustainable            │
- *         └──────────────────────────────────────────────────┘
- *         
- *         Transparency: Vault balance is always on-chain.
- *         No hidden minting. No infinite loops.
- */
 contract PCENTStaking is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     IERC20 public pcent;
-    address public vault; // PCENTVault
+    address public vault;
 
     struct Stake {
         uint256 amount;
@@ -39,7 +21,7 @@ contract PCENTStaking is Ownable, ReentrancyGuard {
 
     mapping(address => Stake) public stakes;
     uint256 public totalStaked;
-    uint256 public rewardRate; // scaled 1e18
+    uint256 public rewardRate;
     uint256 public constant MIN_STAKE = 1_000_000 * 10**18;
     uint256 public constant UNSTAKE_COOLDOWN = 7 days;
 
@@ -51,11 +33,12 @@ contract PCENTStaking is Ownable, ReentrancyGuard {
     event Unstaked(address indexed user, uint256 amount);
     event RewardClaimed(address indexed user, uint256 amount);
     event VaultUpdated(address indexed vault);
+    event TokensWithdrawn(address indexed token, uint256 amount, address indexed to);
 
     constructor(address _pcent) Ownable(msg.sender) {
         require(_pcent != address(0), "Invalid PCENT address");
         pcent = IERC20(_pcent);
-        rewardRate = 365 * 10**14; // ~3.65% APY
+        rewardRate = 365 * 10**14;
     }
 
     function setVault(address _vault) external onlyOwner {
@@ -124,7 +107,6 @@ contract PCENTStaking is Ownable, ReentrancyGuard {
         }
     }
 
-    /// @notice View vault backing (transparent to anyone)
     function getVaultBacking() external view returns (uint256) {
         if (vault == address(0)) return 0;
         (bool success, bytes memory data) = vault.staticcall(
@@ -149,8 +131,16 @@ contract PCENTStaking is Ownable, ReentrancyGuard {
         rewardRate = _rate;
     }
 
-    function withdrawAccidentalTokens(address token, uint256 amount) external onlyOwner {
-        require(token != address(pcent), "Cannot withdraw PCENT");
-        IERC20(token).transfer(owner(), amount);
+    /// @notice Withdraw non-PCENT tokens accidentally sent here
+    /// @param _token Token address (must not be PCENT)
+    /// @param _amount Amount to withdraw
+    /// @param _to Recipient (must not be zero)
+    function withdrawAccidentalTokens(address _token, uint256 _amount, address _to) external onlyOwner {
+        require(_token != address(0), "Token address required");
+        require(_token != address(pcent), "Cannot withdraw PCENT");
+        require(_to != address(0), "Recipient required");
+        require(_amount > 0, "Amount must be > 0");
+        IERC20(_token).safeTransfer(_to, _amount);
+        emit TokensWithdrawn(_token, _amount, _to);
     }
 }
