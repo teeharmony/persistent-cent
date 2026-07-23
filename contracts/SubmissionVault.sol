@@ -69,20 +69,23 @@ contract SubmissionVault is Ownable, ReentrancyGuard {
         require(sub.hunter != address(0), "Submission not found");
         require(!sub.forwarded, "Already forwarded");
         sub.forwarded = true;
-        usd0.safeApprove(vault, 0);
-        usd0.safeApprove(vault, sub.amount);
+
+        // Reset approval first, then set exact amount
+        usd0.forceApprove(vault, sub.amount);
+
         (bool success, ) = vault.call(abi.encodeWithSignature("deposit(uint256)", sub.amount));
         require(success, "Vault deposit failed");
+
         emit FeeForwarded(submissionId, sub.amount);
     }
 
-    /// @notice Forward all accumulated USD0 fees to vault at once
     function forwardAllToVault() external onlyOwner {
         require(vault != address(0), "Vault not set");
         uint256 balance = usd0.balanceOf(address(this));
         require(balance > 0, "No fees to forward");
-        usd0.safeApprove(vault, 0);
-        usd0.safeApprove(vault, balance);
+
+        usd0.forceApprove(vault, balance);
+
         (bool success, ) = vault.call(abi.encodeWithSignature("deposit(uint256)", balance));
         require(success, "Vault deposit failed");
     }

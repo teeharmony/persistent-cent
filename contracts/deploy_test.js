@@ -1,50 +1,41 @@
 const hre = require("hardhat");
 
+/**
+ * PCENT — Test Deployment (Sepolia)
+ * Uses past timestamps so presale can be finalized immediately.
+ */
 async function main() {
   const [deployer] = await hre.ethers.getSigners();
   console.log("Deploying with account:", deployer.address);
   const bal = await hre.ethers.provider.getBalance(deployer.address);
   console.log("Balance:", hre.ethers.formatEther(bal), "ETH");
 
-  // ─── Config ─────────────────────────────────────────────
-  // Presale: starts 1hr after deploy, runs 14 days
+  const STAKING_REWARDS = hre.ethers.parseEther("500000000");
+  const USD0_ADDRESS = "0x73A15FeD60Bf67631dC6cd7Bc5B6e8da8190aCF5";
+  const SUBMISSION_FEE = hre.ethers.parseEther("10");
+
+  // Past timestamps — presale already ended
   const now = Math.floor(Date.now() / 1000);
-  const PRESALE_START = now + 3600;
-  const PRESALE_END = PRESALE_START + 14 * 24 * 3600;
+  const PRESALE_START = now - 7 * 24 * 3600; // 7 days ago
+  const PRESALE_END = now - 3600;              // 1 hour ago
   const PRESALE_RATE = 100_000;
   const MIN_PURCHASE = hre.ethers.parseEther("0.01");
   const MAX_PURCHASE = hre.ethers.parseEther("10");
   const SOFT_CAP = hre.ethers.parseEther("50");
   const HARD_CAP = hre.ethers.parseEther("500");
-  const STAKING_REWARDS = hre.ethers.parseEther("500000000"); // 500M PCENT
 
-  // Two modes: for real presale, deploy and let people buy
-  // For testing (on Sepolia), immediately finalize with no presale
-  const SKIP_PRESALE = true; // Set false for real launch
-
-  // USD0 mainnet address
-  const USD0_ADDRESS = "0x73A15FeD60Bf67631dC6cd7Bc5B6e8da8190aCF5";
-  const SUBMISSION_FEE = hre.ethers.parseEther("10");
-
-  // ─── Step 1: Deploy PCENT Token ──────────────────────
+  // Deploy token
   console.log("\n[1/5] Deploying PersistentCent...");
   const PersistentCent = await hre.ethers.getContractFactory("PersistentCent");
   const token = await PersistentCent.deploy(
-    deployer.address,
-    PRESALE_START,
-    PRESALE_END,
-    PRESALE_RATE,
-    MIN_PURCHASE,
-    MAX_PURCHASE,
-    SOFT_CAP,
-    HARD_CAP
+    deployer.address, PRESALE_START, PRESALE_END, PRESALE_RATE,
+    MIN_PURCHASE, MAX_PURCHASE, SOFT_CAP, HARD_CAP
   );
   await token.waitForDeployment();
   const tokenAddress = await token.getAddress();
   console.log("  PCENT:", tokenAddress);
-  console.log("  Total supply:", hre.ethers.formatEther(await token.totalSupply()), "PCENT");
 
-  // ─── Step 2: Deploy Staking ───────────────────────────
+  // Deploy staking
   console.log("\n[2/5] Deploying PCENTStaking...");
   const PCENTStaking = await hre.ethers.getContractFactory("PCENTStaking");
   const staking = await PCENTStaking.deploy(tokenAddress);
@@ -52,7 +43,7 @@ async function main() {
   const stakingAddress = await staking.getAddress();
   console.log("  Staking:", stakingAddress);
 
-  // ─── Step 3: Deploy Vault ─────────────────────────────
+  // Deploy vault
   console.log("\n[3/5] Deploying PCENTVault...");
   const PCENTVault = await hre.ethers.getContractFactory("PCENTVault");
   const vault = await PCENTVault.deploy(USD0_ADDRESS);
@@ -60,7 +51,7 @@ async function main() {
   const vaultAddress = await vault.getAddress();
   console.log("  Vault:", vaultAddress);
 
-  // ─── Step 4: Deploy SubmissionVault ────────────────────
+  // Deploy submission vault
   console.log("\n[4/5] Deploying SubmissionVault...");
   const SubmissionVault = await hre.ethers.getContractFactory("SubmissionVault");
   const submissionVault = await SubmissionVault.deploy(USD0_ADDRESS, SUBMISSION_FEE);
@@ -68,30 +59,23 @@ async function main() {
   const subVaultAddress = await submissionVault.getAddress();
   console.log("  SubmissionVault:", subVaultAddress);
 
-  // ─── Step 5: Finalize & Configure ──────────────────────
+  // Finalize presale (presale already ended)
   console.log("\n[5/5] Finalizing and configuring...");
+  const finalizeTx = await token.finalizePresale();
+  await finalizeTx.wait();
+  console.log("  Presale finalized");
 
-  if (SKIP_PRESALE) {
-    // For testing: override timestamps so we can finalize immediately
-    // Set presaleStart and presaleEnd to past
-    // This requires the contract to have a setter, or we mine blocks until presale ends
-    // Easiest: just fast-forward if on hardhat, or on Sepolia we simulate by setting past dates
-    // On Sepolia we can't fast-forward, so we deploy with past timestamps instead
-    
-    // Actually, let's just wait... or better, redeploy with past timestamps
-    console.log("  SKIP_PRESALE is true but timestamps are in the future.");
-    console.log("  For testing, run: npx hardhat run contracts/deploy_test.js --network sepolia");
-    console.log("  That script uses past timestamps.");
-  }
+  // Fund staking
+  await (await token.transfer(stakingAddress, STAKING_REWARDS)).wait();
+  console.log("  Staking funded: 500M PCENT");
 
-  // Configure vault connections
+  // Configure vaults
   await (await staking.setVault(vaultAddress)).wait();
   console.log("  Vault set in staking");
-
   await (await submissionVault.setVault(vaultAddress)).wait();
   console.log("  Vault set in submission vault");
 
-  // ─── Summary ──────────────────────────────────────────
+  // ─── Verify ──────────────────────────────────────────
   console.log("\n╔══════════════════════════════════════╗");
   console.log("║       DEPLOYMENT COMPLETE            ║");
   console.log("╠══════════════════════════════════════╣");
@@ -101,13 +85,10 @@ async function main() {
   console.log("║  Submission:    ", subVaultAddress);
   console.log("║  USD0:          ", USD0_ADDRESS);
   console.log("╠══════════════════════════════════════╣");
-  console.log("║  Presale:", SKIP_PRESALE ? "SKIPPED (test mode)" : "ACTIVE");
+  console.log("║  Owner bal: ", hre.ethers.formatEther(await token.balanceOf(deployer.address)), "PCENT");
+  console.log("║  Stake bal: ", hre.ethers.formatEther(await token.balanceOf(stakingAddress)), "PCENT");
+  console.log("║  Contract:  ", hre.ethers.formatEther(await token.balanceOf(tokenAddress)), "PCENT");
   console.log("╚══════════════════════════════════════╝");
-
-  console.log("\nTo finalize presale (after it ends):");
-  console.log(`  npx hardhat console --network sepolia`);
-  console.log(`  const token = await ethers.getContractAt("PersistentCent", "${tokenAddress}");`);
-  console.log(`  await token.finalizePresale();`);
 }
 
 main().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(1); });
